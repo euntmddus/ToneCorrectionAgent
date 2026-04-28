@@ -1,4 +1,173 @@
 {
-  "text": "나 이거 다 했어. 언제 줄까?",
-  "targetTone": "Polite"
+  "description": "엣지케이스 모음 — 입력 오류, 부적절한 표현, 길이 위반, 빈 맥락 등 실패 시나리오",
+  "cases": [
+    {
+      "id": "edge-01",
+      "targetTone": "자기소개서",
+      "input": {
+        "text": "나 잘해",
+        "detailTarget": "",
+        "detailContext": "",
+        "detailNuance": ""
+      },
+      "expectedBehavior": "REJECT",
+      "reason": "입력 글자 수 5자 미만 — API 호출 없이 클라이언트에서 즉시 반려",
+      "recoveryAction": {
+        "type": "USER_RETRY",
+        "trigger": "입력 5자 미만",
+        "message": "문맥을 판단하기에 너무 짧습니다. 조금 더 긴 문장을 입력해주세요. (최소 5자)",
+        "nextStep": "사용자가 더 긴 문장을 재입력하여 재시도"
+      },
+      "expectedOutput": {
+        "correctedText": null,
+        "reasoning": null,
+        "changes": [],
+        "toneMatch": false,
+        "isMeaningOk": false,
+        "rawScore": 0,
+        "alternatives": [],
+        "validation": {
+          "lengthRatio": null,
+          "isLengthOk": false,
+          "isMeaningOk": false,
+          "score": 0
+        }
+      }
+    },
+    {
+      "id": "edge-02",
+      "targetTone": "비즈니스 메일",
+      "input": {
+        "text": "ㅋㅋㅋ 야 이거 진짜 개웃기지 않냐? 씨발 미쳤다",
+        "detailTarget": "팀장님",
+        "detailContext": "업무 보고",
+        "detailNuance": "정중하게"
+      },
+      "expectedBehavior": "LOW_CONFIDENCE",
+      "reason": "비속어·혐오 표현 포함 — rawScore 0점, 신뢰도 경고 배너 노출",
+      "recoveryAction": {
+        "type": "HUMAN_INTERVENTION",
+        "trigger": "rawScore < 60 (비속어 감지, rawScore = 0)",
+        "message": "수동 검토 권장 (Human Intervention Needed) — AI 엔진의 신뢰도 점수가 낮습니다. 반드시 직접 내용을 확인 후 사용해주세요.",
+        "nextStep": "사람이 직접 내용을 검토하거나, 입력 문장을 수정하여 재시도"
+      },
+      "expectedOutput": {
+        "correctedText": "부적절한 내용이 포함되어 있습니다.",
+        "reasoning": "입력 문장에 비속어 및 혐오 표현이 포함되어 교정이 불가합니다.",
+        "changes": [],
+        "toneMatch": false,
+        "isMeaningOk": false,
+        "rawScore": 0,
+        "alternatives": [],
+        "validation": {
+          "lengthRatio": null,
+          "isLengthOk": false,
+          "isMeaningOk": false,
+          "score": 0
+        }
+      }
+    },
+    {
+      "id": "edge-03",
+      "targetTone": "공지",
+      "input": {
+        "text": "회의 있음",
+        "detailTarget": "",
+        "detailContext": "",
+        "detailNuance": ""
+      },
+      "expectedBehavior": "REJECT",
+      "reason": "입력 글자 수 5자 미만 — API 호출 없이 클라이언트에서 즉시 반려",
+      "recoveryAction": {
+        "type": "USER_RETRY",
+        "trigger": "입력 5자 미만",
+        "message": "문맥을 판단하기에 너무 짧습니다. 조금 더 긴 문장을 입력해주세요. (최소 5자)",
+        "nextStep": "사용자가 더 긴 문장을 재입력하여 재시도"
+      },
+      "expectedOutput": {
+        "correctedText": null,
+        "reasoning": null,
+        "changes": [],
+        "toneMatch": false,
+        "isMeaningOk": false,
+        "rawScore": 0,
+        "alternatives": [],
+        "validation": {
+          "lengthRatio": null,
+          "isLengthOk": false,
+          "isMeaningOk": false,
+          "score": 0
+        }
+      }
+    },
+    {
+      "id": "edge-04",
+      "targetTone": "메신저",
+      "input": {
+        "text": "ㅎㅇ ㅂㅂ ㄱㄱ ㅇㅋ ㄴㄴ ㅠㅠ ㅋㅋ ㄷㄷ ㅎㅎ ㅉㅉ",
+        "detailTarget": "",
+        "detailContext": "",
+        "detailNuance": ""
+      },
+      "expectedBehavior": "LOW_CONFIDENCE",
+      "reason": "의미 없는 자음 나열 — rawScore 0점 또는 60점 미만, 신뢰도 경고 배너 노출",
+      "recoveryAction": {
+        "type": "HUMAN_INTERVENTION",
+        "trigger": "rawScore < 60 (무의미한 입력 감지, rawScore = 0)",
+        "message": "수동 검토 권장 (Human Intervention Needed) — AI 엔진의 신뢰도 점수가 낮습니다. 반드시 직접 내용을 확인 후 사용해주세요.",
+        "nextStep": "사람이 직접 내용을 검토하거나, 의미 있는 문장으로 수정하여 재시도"
+      },
+      "expectedOutput": {
+        "correctedText": "부적절한 내용이 포함되어 있습니다.",
+        "reasoning": "입력 문장이 의미 있는 문장으로 판단되지 않아 교정이 불가합니다.",
+        "changes": [],
+        "toneMatch": false,
+        "isMeaningOk": false,
+        "rawScore": 0,
+        "alternatives": [],
+        "validation": {
+          "lengthRatio": null,
+          "isLengthOk": false,
+          "isMeaningOk": false,
+          "score": 0
+        }
+      }
+    },
+    {
+      "id": "edge-05",
+      "targetTone": "정중한 컴플레인",
+      "input": {
+        "text": "이 제품 완전 쓰레기고 환불 당장 해줘야 하고 담당자 나와라 지금 당장 빨리빨리 해결 안 하면 고소할 거야 진짜로 법적 조치 취할 거니까 알아서 해",
+        "detailTarget": "고객센터 상담원",
+        "detailContext": "제품 불량으로 인한 환불 요청",
+        "detailNuance": "강압적이고 위협적으로"
+      },
+      "expectedBehavior": "LOW_CONFIDENCE",
+      "reason": "원문 길이 대비 교정 결과가 ±20% 초과할 가능성 높음 + 위협적 뉘앙스 요청으로 rawScore 60점 미만 예상",
+      "recoveryAction": {
+        "type": "HUMAN_INTERVENTION",
+        "trigger": "rawScore < 60 (톤 충돌 + 길이 위반, rawScore = 45)",
+        "message": "수동 검토 권장 (Human Intervention Needed) — 요청한 뉘앙스('강압적')와 목표 톤('정중한 컴플레인')이 충돌합니다. 결과를 반드시 직접 확인 후 사용해주세요.",
+        "nextStep": "사람이 직접 내용을 검토하거나, 뉘앙스 설정을 '정중하게'로 변경하여 재시도"
+      },
+      "expectedOutput": {
+        "correctedText": "안녕하세요. 구매한 제품에 불량이 발생하여 환불을 요청드립니다. 빠른 처리를 부탁드립니다.",
+        "reasoning": "위협적 표현을 제거하고 정중한 컴플레인 형식으로 교정하였으나, 원문의 강압적 뉘앙스 요청과 목표 톤이 충돌하여 신뢰도가 낮습니다.",
+        "changes": [
+          { "from": "완전 쓰레기고", "to": "불량이 발생하여", "reason": "정중한 컴플레인 톤에 맞게 감정적 표현 제거" },
+          { "from": "당장 해줘야 하고", "to": "요청드립니다", "reason": "요청 형식으로 전환하여 격식 유지" }
+        ],
+        "toneMatch": false,
+        "isMeaningOk": true,
+        "rawScore": 45,
+        "alternatives": [],
+        "validation": {
+          "lengthRatio": 0.55,
+          "isLengthOk": false,
+          "isMeaningOk": true,
+          "score": 45
+        }
+      }
+    }
+  ]
 }
